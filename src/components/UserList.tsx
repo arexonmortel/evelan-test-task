@@ -47,7 +47,7 @@ export default function UserList({ initialUsers, totalUsers }: UserListProps) {
         <button
           onClick={loadMore}
           disabled={!hasMore || isLoading}
-          className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {isLoading ? 'Loading...' :  'Load More' }
         </button>
