@@ -1,33 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { User } from '@/lib/type'
 import { fetchUsers } from '@/lib/api'
 import UserCard from './UserCard'
 
 interface UserListProps {
   initialUsers: User[]
+  totalUsers: number
 }
 
-export default function UserList({ initialUsers }: UserListProps) {
+export default function UserList({ initialUsers, totalUsers }: UserListProps) {
   const [users, setUsers] = useState<User[]>(initialUsers)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 
+  useEffect(() => {
+    setHasMore(users.length < totalUsers)
+  }, [users, totalUsers])
+
   const loadMore = async () => {
+    if (isLoading || !hasMore) return
+
     setIsLoading(true)
-    const nextPage = page + 1
-    const newUsers = await fetchUsers(nextPage)
-    setUsers([...users, ...newUsers])
-    setPage(nextPage)
-    setHasMore(newUsers.length === 6)
-    setIsLoading(false)
+    try {
+      const nextPage = page + 1
+      const { users: newUsers } = await fetchUsers(nextPage)
+      setUsers(prevUsers => [...prevUsers, ...newUsers])
+      setPage(nextPage)
+    } catch (error) {
+      console.error('Error fetching more users:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         {users.map((user) => (
           <UserCard key={user.id} user={user} />
         ))}
@@ -38,7 +49,7 @@ export default function UserList({ initialUsers }: UserListProps) {
           disabled={!hasMore || isLoading}
           className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
         >
-          {isLoading ? 'Loading...' : 'Load More'}
+          {isLoading ? 'Loading...' :  'Load More' }
         </button>
       </div>
     </div>
