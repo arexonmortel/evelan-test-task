@@ -12,7 +12,7 @@ export default async function UsersPage() {
 
   return (
     <main className="min-h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6">User List</h1>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6">Evelan Users</h1>
       <div className="flex-grow">
         <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
           <UserList initialUsers={initialUsers} totalUsers={totalUsers} />
